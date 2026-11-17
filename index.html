@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Luciferian Era (NLE) | Temporal Architecture & Calendar Engine</title>
+    <meta name="description" content="Official temporal calculation hub for the New Luciferian Era (NLE), featuring live astronomical adjustments, true-sky zodiac alignment, and divinatory integration for The Naked Diviner.">
+    
+    <!-- Google Fonts: Cinzel & Space Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- GEO / JSON-LD Structured Data Schema (@graph Entity Network) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://newluciferianera.org/#website",
+          "url": "https://newluciferianera.org/",
+          "name": "New Luciferian Era",
+          "description": "Temporal calculation hub and astronomical alignment engine.",
+          "publisher": {
+            "@id": "https://jeremycrow.com/#person"
+          }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://jeremycrow.com/#person",
+          "name": "Jeremy Crow",
+          "alternateName": "Jeremy McKenzie-Crowe",
+          "url": "https://jeremycrow.com/",
+          "sameAs": [
+            "https://novusordoluciferi.org/",
+            "https://unknownphilosopher.org/",
+            "https://zigguratofenki.org/",
+            "https://gnosticluciferian.org/",
+            "https://luciferianresearch.org/"
+          ]
+        },
+        {
+          "@type": "EducationalOrganization",
+          "@id": "https://novusordoluciferi.org/#organization",
+          "name": "Novus Ordo Luciferi",
+          "url": "https://novusordoluciferi.org/"
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://newluciferianera.org/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is the New Luciferian Era (NLE) calendar?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The NLE calendar is an astronomical, non-arbitrary temporal framework anchored to true-sky zodiac stations and lunation thresholds rather than conventional dogmatic calendars."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How is Day 0 determined?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Day 0 of each lunation cycle is determined by the precise timing of the New Moon conjunction relative to the Guatemala meridian baseline, checking the midnight boundary threshold."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
+</head>
+<body>
+
+    <!-- Header / Navigation -->
+    <header class="site-header">
+        <div class="container header-grid">
+            <div class="logo">
+                <span class="logo-text">NLE // Temporal Engine</span>
+            </div>
+            <nav class="site-nav">
+                <a href="#converter">Converter</a>
+                <a href="#mechanics">Calendar Rules</a>
+                <a href="#divination">The Naked Diviner</a>
+                <a href="https://novusordoluciferi.org/" target="_blank" rel="noopener">NOL Order</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <span class="eyebrow">Astronomical & Alchemical Architecture</span>
+                <h1>The New Luciferian Era</h1>
+                <p class="hero-subtitle">A precise temporal framework syncing terrestrial consciousness with true-sky stellar mechanics, lunation geometry, and Substrate Mind.</p>
+            </div>
+        </section>
+
+        <!-- Live Temporal Dashboard / Date Converter Widget -->
+        <section id="converter" class="converter-section">
+            <div class="container">
+                <div class="converter-card">
+                    <h2>Live NLE Temporal Calculator</h2>
+                    <p class="instruction">Convert any Gregorian date into its precise New Luciferian Era lunation and True Sky coordinate.</p>
+                    
+                    <div class="converter-inputs">
+                        <div class="input-group">
+                            <label for="gregorian-date">Select Gregorian Date:</label>
+                            <input type="date" id="gregorian-date">
+                        </div>
+                        <button id="convert-btn" class="btn">Calculate NLE Coordinate</button>
+                    </div>
+
+                    <div id="converter-output" class="output-panel">
+                        <div class="output-grid">
+                            <div class="metric">
+                                <span class="label">NLE Year / Cycle:</span>
+                                <span id="out-nle-year" class="value">—</span>
+                            </div>
+                            <div class="metric">
+                                <span class="label">Lunation Day:</span>
+                                <span id="out-lunation" class="value">—</span>
+                            </div>
+                            <div class="metric">
+                                <span class="label">True Sky Zodiac Station:</span>
+                                <span id="out-zodiac" class="value">—</span>
+                            </div>
+                            <div class="metric">
+                                <span class="label">Guatemala Meridian Status:</span>
+                                <span id="out-meridian" class="value">—</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Calendar Mechanics Section -->
+        <section id="mechanics" class="content-section">
+            <div class="container">
+                <h2>The Mechanics of Time</h2>
+                <div class="grid-2col">
+                    <div class="card">
+                        <h3>The Lunation Rule & Midnight Threshold</h3>
+                        <p>Traditional calendars impose arbitrary grid lines over organic cosmic rhythms. The NLE calendar anchors Day 0 of each cycle strictly to the exact astronomical New Moon conjunction. Using the Guatemala meridian reference coordinate (UTC-6), our engine evaluates whether the conjunction occurs before or after local midnight, establishing an unshakeable baseline for temporal tracking.</p>
+                    </div>
+                    <div class="card">
+                        <h3>True Sky Astronomy</h3>
+                        <p>Moving beyond outdated tropical and sidereal compromises, the NLE framework maps time directly against the 13 constellations of the astronomical sky—integrating Ophiuchus as the crucial 13th balancing station between Scorpio and Sagittarius.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Divination Integration Section -->
+        <section id="divination" class="content-section bg-dark">
+            <div class="container">
+                <h2>The Naked Diviner & Master Oracle</h2>
+                <p class="lead-text">Currently in active development, <em>The Naked Diviner</em> volume establishes the definitive manual for mapping the 89-card Master Oracle engine against physical reality and temporal cycles.</p>
+                <div class="feature-box">
+                    <p>By synchronizing daily card pulls with active NLE zodiac stations and planetary metal resonances, operators transform cartomancy from passive fortune-telling into active, high-bandwidth code injection within The Grand Dream.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer / Entity Network Grid -->
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-col">
+                <h4>Ecosystem Network</h4>
+                <ul class="ecosystem-links">
+                    <li><a href="https://jeremycrow.com/" target="_blank" rel="noopener">Jeremy Crow Hub</a></li>
+                    <li><a href="https://novusordoluciferi.org/" target="_blank" rel="noopener">Novus Ordo Luciferi</a></li>
+                    <li><a href="https://unknownphilosopher.org/" target="_blank" rel="noopener">Unknown Philosopher (Martinist)</a></li>
+                    <li><a href="https://zigguratofenki.org/" target="_blank" rel="noopener">Knights of the Ziggurat</a></li>
+                    <li><a href="https://gnosticluciferian.org/" target="_blank" rel="noopener">Gnostic Temple of the Morning Star</a></li>
+                    <li><a href="https://luciferianresearch.org/" target="_blank" rel="noopener">Luciferian Research Society</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Standards & Protocol</h4>
+                <p>Pure static HTML5, modular CSS, vanilla JavaScript, and semantic JSON-LD @graph architecture designed for high-speed indexing and sovereign digital infrastructure.</p>
+                <p class="copyright">&copy; 2026 Jeremy Crow / NLE Network. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

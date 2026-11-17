@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Set default date input to today
     const dateInput = document.getElementById('gregorian-date');
     const convertBtn = document.getElementById('convert-btn');
     
+    // Set default date input to today
     const today = new Date().toISOString().split('T')[0];
     dateInput.value = today;
 
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const outZodiac = document.getElementById('out-zodiac');
     const outMeridian = document.getElementById('out-meridian');
 
-    // Zodiac Stations Array (True Sky sequence starting with Aquarius)
+    // True Sky Zodiac Stations (13 stations starting with Aquarius)
     const trueSkyZodiac = [
         "Aquarius (The Star)",
         "Pisces (The Moon)",
@@ -30,34 +30,51 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     function calculateNLE(dateString) {
-        const selectedDate = new Date(dateString);
+        const targetDate = new Date(dateString + 'T00:00:00-06:00'); // Anchored to Guatemala Meridian (UTC-6)
         
-        // Simulating astronomical calculation mapped to Guatemala Meridian (UTC-6)
-        // In production expansion, an ephemeris library (like Astronomy Engine) is evaluated here.
+        // 1. Calculate NLE Year based on Dec 21 solstice anchor (Epoch: Dec 21, 2012 = Year 0)
+        const targetYear = targetDate.getFullYear();
+        let nleYear = targetYear - 2012;
         
-        // Mock algorithmic derivation for MVP display:
-        const year = selectedDate.getFullYear();
-        const nleYear = year - 2000 + 26; // Example Epoch scaling
-        
-        // Pseudo lunation day calculation (0 to 29)
-        const dayOfYear = Math.floor((selectedDate - new Date(year, 0, 0)) / (1000 * 60 * 60 * 24));
-        const lunationDay = (dayOfYear % 29.5) | 0;
-        
-        // Zodiac index mapping based on month/season rotation
-        const zodiacIndex = Math.floor((dayOfYear / 28) % trueSkyZodiac.length);
-        
-        // Midnight Threshold Check simulation for Guatemala (UTC-6)
-        // Checking if conjunction falls before/after 00:00:00 local time
-        const hoursCheck = (dayOfYear * 7) % 24;
-        const meridianStatus = hoursCheck >= 12 
-            ? `Post-Midnight Rollover (${hoursCheck.toFixed(0)}h UTC-6)` 
-            : `Pre-Midnight Anchor (Day 0 Confirmed)`;
+        // Check if before winter solstice of that calendar year
+        const solsticeThisYear = new Date(targetYear, 11, 21, 0, 0, 0, -6); // Dec 21
+        if (targetDate < solsticeThisYear) {
+            nleYear -= 1;
+        }
 
-        // Render to UI
-        outYear.textContent = `NLE Cycle ${nleYear}`;
-        outLunation.textContent = `Day ${lunationDay} of 29`;
+        // 2. Approximate Synodic Lunar Cycle calculations anchored to known baseline
+        // Mean synodic month = 29.530588 days
+        const epochSolstice = new Date('2012-12-21T00:00:00-06:00');
+        const diffTime = targetDate - epochSolstice;
+        const diffDays = diffTime / (1000 * 60 * 60 * 24);
+        
+        // Approximate lunation tracking from epoch
+        const synodicMonth = 29.530588;
+        const totalLunations = diffDays / synodicMonth;
+        
+        // Day within current lunation (0 to ~29)
+        const lunationDay = Math.floor((totalLunations % 1) * synodicMonth);
+        
+        // Lunation index within the year (0 to 12/13)
+        // Solstice reset adjustment
+        const daysSinceSolstice = (targetDate - solsticeThisYear) / (1000 * 60 * 60 * 24);
+        let lunationIndex = Math.floor(daysSinceSolstice / synodicMonth);
+        if (lunationIndex < 0) lunationIndex = 12; // Fallback for late year pre-solstice
+        lunationIndex = Math.abs(lunationIndex) % 13;
+
+        // 3. True Sky Zodiac Mapping based on day of solar year
+        const dayOfYear = ((targetDate - solsticeThisYear) / (1000 * 60 * 60 * 24) + 365) % 365;
+        const zodiacIndex = Math.floor((dayOfYear / 365) * trueSkyZodiac.length) % trueSkyZodiac.length;
+
+        // 4. Guatemala Meridian Midnight Threshold Status
+        const hoursOffset = targetDate.getHours();
+        const meridianStatus = "Guatemala Meridian (UTC-6) Active";
+
+        // Format result: Year - Lunation - Day NLE
+        outYear.textContent = `Year ${nleYear} (NLE Cycle)`;
+        outLunation.textContent = `Lunation ${lunationIndex}, Day ${lunationDay}`;
         outZodiac.textContent = trueSkyZodiac[zodiacIndex];
-        outMeridian.textContent = meridianStatus;
+        outMeridian.textContent = `${meridianStatus} [${nleYear}-${lunationIndex}-${lunationDay} NLE]`;
     }
 
     // Initial calculation on load

@@ -113,7 +113,7 @@ h1 {
 
 /* Converter Section */
 .converter-section {
-    padding: 3rem 0;
+    padding: 1.5rem 0 2.5rem;
 }
 
 .converter-card {
@@ -132,14 +132,15 @@ h1 {
 .instruction {
     color: var(--text-muted);
     font-size: 0.85rem;
-    margin-bottom: 2rem;
+    margin-top: 1.2rem;
+    margin-bottom: 0;
 }
 
 .converter-inputs {
     display: flex;
     gap: 1rem;
     align-items: flex-end;
-    margin-bottom: 2rem;
+    margin-bottom: 0;
     flex-wrap: wrap;
 }
 
@@ -193,6 +194,7 @@ input[type="date"] {
     border: 1px solid var(--border-color);
     padding: 1.5rem;
     border-radius: 2px;
+    margin-bottom: 1.8rem;
 }
 
 .output-grid {
@@ -309,4 +311,36 @@ input[type="date"] {
     margin-top: 1.5rem;
     font-size: 0.75rem;
     color: var(--text-muted);
+}
+
+/* Mobile nav fix */
+@media (max-width: 700px) {
+    .header-grid {
+        flex-direction: column;
+        gap: 0.4rem;
+        padding: 0.4rem 0;
+    }
+    .site-header {
+        height: auto;
+        min-height: 70px;
+    }
+    body {
+        padding-top: 90px;
+    }
+    .site-nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.8rem 1.2rem;
+        font-size: 0.8rem;
+    }
+    .logo-text {
+        font-size: 1rem;
+        text-align: center;
+    }
+    .hero {
+        padding: 2.5rem 0 2rem;
+    }
+    h1 {
+        font-size: 2.2rem;
+    }
 }

@@ -1,19 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
     const dateInput = document.getElementById('gregorian-date');
     const convertBtn = document.getElementById('convert-btn');
-    
-    // Set default date input to today
+
+    // Set default date to today
     const today = new Date();
     const todayString = today.toISOString().split('T')[0];
     dateInput.value = todayString;
 
-    // Output DOM elements
+    // Output elements
     const outYear = document.getElementById('out-nle-year');
     const outLunation = document.getElementById('out-lunation');
     const outZodiac = document.getElementById('out-zodiac');
     const outMeridian = document.getElementById('out-meridian');
 
-    // True Sky Zodiac Stations (13 stations starting with Aquarius)
+    // True Sky Zodiac (13 stations)
     const trueSkyZodiac = [
         "Aquarius (The Star)",
         "Pisces (The Moon)",
@@ -31,95 +31,88 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     // Constants
-    const SYNODIC_MONTH = 29.530588;
-    const MS_PER_DAY = 1000 * 60 * 60 * 24;
-    
-    // Reference New Moon: 2012-12-13 ~00:00 UTC (tuned so Dec 21 2012 is day 8)
-    const REF_NEW_MOON = new Date(Date.UTC(2012, 11, 13, 0, 0, 0));
-    
-    // Epoch solstice: Dec 21, 2012 (start of Year 0)
-    const EPOCH_SOLSTICE = new Date(Date.UTC(2012, 11, 21, 0, 0, 0));
+    const SYNODIC_MONTH = 29.530588;          // mean synodic month in days
+    const MS_PER_DAY = 86400000;
+
+    // Anchor: 2025-08-23 06:06 UTC
+    // = 12:06 am Guatemala (UTC-6) = Day 0 of Lunation 9, Year 12 NLE
+    const ANCHOR_NEW_MOON = new Date(Date.UTC(2025, 7, 23, 6, 6, 0));
+    const ANCHOR_YEAR = 12;
+    const ANCHOR_LUNATION = 9;
 
     /**
-     * Approximate the previous New Moon before or on the given date.
-     * Uses average synodic month from reference.
+     * Get the winter solstice (Dec 21 00:00 UTC) that starts the NLE year
+     * containing the given date.
      */
-    function getPreviousNewMoon(targetDate) {
-        const diffMs = targetDate.getTime() - REF_NEW_MOON.getTime();
-        const diffDays = diffMs / MS_PER_DAY;
-        const lunationsSinceRef = Math.floor(diffDays / SYNODIC_MONTH);
-        const prevNewMoonMs = REF_NEW_MOON.getTime() + lunationsSinceRef * SYNODIC_MONTH * MS_PER_DAY;
-        return new Date(prevNewMoonMs);
-    }
-
-    /**
-     * Get the winter solstice date (approx Dec 21) for the NLE year of the target.
-     */
-    function getSolsticeForDate(targetDate) {
-        const year = targetDate.getUTCFullYear();
-        let solstice = new Date(Date.UTC(year, 11, 21, 0, 0, 0));
-        if (targetDate < solstice) {
-            solstice = new Date(Date.UTC(year - 1, 11, 21, 0, 0, 0));
+    function getSolsticeForDate(date) {
+        const y = date.getUTCFullYear();
+        let solstice = new Date(Date.UTC(y, 11, 21, 0, 0, 0));
+        if (date < solstice) {
+            solstice = new Date(Date.UTC(y - 1, 11, 21, 0, 0, 0));
         }
         return solstice;
     }
 
+    /**
+     * Find the New Moon that began the lunation containing the target date.
+     * Works both forward and backward from the 2025-08-23 anchor.
+     */
+    function getPreviousNewMoon(target) {
+        const diffDays = (target.getTime() - ANCHOR_NEW_MOON.getTime()) / MS_PER_DAY;
+        const lunationsOffset = Math.floor(diffDays / SYNODIC_MONTH);
+        const ms = ANCHOR_NEW_MOON.getTime() + lunationsOffset * SYNODIC_MONTH * MS_PER_DAY;
+        return new Date(ms);
+    }
+
     function calculateNLE(dateString) {
-        // Parse as UTC midnight for consistency (Guatemala UTC-6 is close enough for day boundaries)
-        const targetDate = new Date(dateString + 'T00:00:00Z');
-        
-        // NLE Year: number of solstices since Dec 21, 2012
-        const solstice = getSolsticeForDate(targetDate);
+        // Interpret the date as Guatemala midnight (UTC-6)
+        // so the Day 0 threshold matches the workshop rule
+        const target = new Date(dateString + 'T00:00:00-06:00');
+
+        // NLE Year (solstice-based)
+        const solstice = getSolsticeForDate(target);
         let nleYear = solstice.getUTCFullYear() - 2012;
         if (solstice.getUTCFullYear() === 2012) nleYear = 0;
 
-        // Find previous New Moon
-        const prevNewMoon = getPreviousNewMoon(targetDate);
-        const daysIntoLunation = Math.floor((targetDate.getTime() - prevNewMoon.getTime()) / MS_PER_DAY);
-        
-        // Determine lunation number within the NLE year
-        // Find the New Moon that was active on the solstice (or the previous one)
+        // Days into the current lunar cycle (0 = New Moon day)
+        const prevNewMoon = getPreviousNewMoon(target);
+        let day = Math.floor((target.getTime() - prevNewMoon.getTime()) / MS_PER_DAY);
+        if (day < 0) day = 0;
+        if (day > 29) day = 29; // safety clamp
+
+        // Lunation number within the year
+        // Count new moons from the solstice's ongoing lunation
         const solsticePrevNewMoon = getPreviousNewMoon(solstice);
-        
-        // Count how many new moons have occurred from solsticePrevNewMoon up to prevNewMoon
-        const lunationsFromSolstice = Math.round((prevNewMoon.getTime() - solsticePrevNewMoon.getTime()) / (SYNODIC_MONTH * MS_PER_DAY));
-        
-        // Lunation 0 is the one ongoing (or starting) on the solstice
-        let lunationIndex = lunationsFromSolstice;
-        
-        // Special case: if the solstice itself is a new moon day, lunation starts at 0
-        // For most years, the ongoing cycle becomes lunation 0
-        
-        // Zodiac: approximate based on days since solstice (true sky is more complex; this is a practical mapping)
-        const daysSinceSolstice = (targetDate.getTime() - solstice.getTime()) / MS_PER_DAY;
-        const zodiacIndex = Math.floor((Math.max(0, daysSinceSolstice) / 365.25) * trueSkyZodiac.length) % trueSkyZodiac.length;
+        const lunationsFromSolstice = Math.round(
+            (prevNewMoon.getTime() - solsticePrevNewMoon.getTime()) / (SYNODIC_MONTH * MS_PER_DAY)
+        );
+        const lunation = lunationsFromSolstice;
+
+        // True-sky zodiac (practical linear mapping from solstice)
+        const daysSinceSolstice = (target.getTime() - solstice.getTime()) / MS_PER_DAY;
+        const zodiacIndex = Math.floor((Math.max(0, daysSinceSolstice) / 365.25) * 13) % 13;
 
         // Status
         let status = "Ongoing Lunation";
-        if (daysIntoLunation === 0) status = "New Moon (Day 0)";
-        else if (daysIntoLunation >= 28) status = "Approaching Next New Moon";
+        if (day === 0) status = "New Moon – Day 0 (Guatemala midnight threshold)";
+        else if (day >= 28) status = "Approaching next New Moon";
 
         // Render
         outYear.textContent = `Year ${nleYear} NLE`;
-        outLunation.textContent = `${nleYear} – ${lunationIndex} – ${daysIntoLunation} NLE`;
+        outLunation.textContent = `${nleYear} – ${lunation} – ${day} NLE`;
         outZodiac.textContent = trueSkyZodiac[zodiacIndex];
         outMeridian.textContent = status;
     }
 
-    // Initial calculation on load
+    // Initial load
     calculateNLE(todayString);
 
-    // Event listener for button click
+    // Button + change events
     convertBtn.addEventListener('click', () => {
-        if (dateInput.value) {
-            calculateNLE(dateInput.value);
-        }
+        if (dateInput.value) calculateNLE(dateInput.value);
     });
 
-    // Also recalculate on date change
     dateInput.addEventListener('change', () => {
-        if (dateInput.value) {
-            calculateNLE(dateInput.value);
-        }
+        if (dateInput.value) calculateNLE(dateInput.value);
     });
 });

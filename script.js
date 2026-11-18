@@ -6,13 +6,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const todayString = today.toISOString().split('T')[0];
     dateInput.value = todayString;
 
-    const outYear = document.getElementById('out-nle-year');
     const outLunation = document.getElementById('out-lunation');
     const outZodiac = document.getElementById('out-zodiac');
     const outMeridian = document.getElementById('out-meridian');
     const outDayRuler = document.getElementById('out-day-ruler');
 
-    // True Sky ranges (same as before)
     const sunTrueSkyRanges = [
         { start: [1, 20], end: [2, 16], name: "Capricornus", symbol: "♑" },
         { start: [2, 16], end: [3, 11], name: "Aquarius", symbol: "♒" },
@@ -30,13 +28,13 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     const dayRulers = [
-        { planet: "The Sun", symbol: "☉", tarot: "The Sun" },          // Sunday
-        { planet: "The Moon", symbol: "☽", tarot: "The High Priestess" }, // Monday
-        { planet: "Mars", symbol: "♂", tarot: "The Tower" },            // Tuesday
-        { planet: "Mercury", symbol: "☿", tarot: "The Sorcerer" },      // Wednesday
-        { planet: "Jupiter", symbol: "♃", tarot: "The Wheel of Fortune" }, // Thursday
-        { planet: "Venus", symbol: "♀", tarot: "The Empress" },         // Friday
-        { planet: "Saturn", symbol: "♄", tarot: "The Universe" }        // Saturday
+        { planet: "The Sun", symbol: "☉", tarot: "The Sun" },
+        { planet: "The Moon", symbol: "☽", tarot: "The High Priestess" },
+        { planet: "Mars", symbol: "♂", tarot: "The Tower" },
+        { planet: "Mercury", symbol: "☿", tarot: "The Sorcerer" },
+        { planet: "Jupiter", symbol: "♃", tarot: "The Wheel of Fortune" },
+        { planet: "Venus", symbol: "♀", tarot: "The Empress" },
+        { planet: "Saturn", symbol: "♄", tarot: "The Universe" }
     ];
 
     const SYNODIC_MONTH = 29.530588;
@@ -95,32 +93,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const target = new Date(dateString + 'T00:00:00-06:00');
         const dateObj = new Date(dateString + 'T12:00:00Z');
 
-        // NLE Year
         const solstice = getSolsticeForDate(target);
         let nleYear = solstice.getUTCFullYear() - 2012;
         if (solstice.getUTCFullYear() === 2012) nleYear = 0;
 
-        // Lunation day
         const lunationNewMoon = getLunationStartNewMoon(target);
         const newMoonGtDate = toGuatemalaDateString(lunationNewMoon);
         const newMoonNoon = new Date(newMoonGtDate + 'T12:00:00Z');
         const day = Math.max(0, Math.round((dateObj - newMoonNoon) / MS_PER_DAY));
 
-        // Lunation index
         const solsticeNewMoon = getLunationStartNewMoon(solstice);
         const lunation = Math.max(0, Math.round(
             (lunationNewMoon.getTime() - solsticeNewMoon.getTime()) / (SYNODIC_MONTH * MS_PER_DAY)
         ));
 
-        // Sun true sky + symbol
         const sunData = getSunTrueSky(target);
-
-        // Day ruler
-        const weekday = dateObj.getUTCDay(); // 0 = Sunday
+        const weekday = dateObj.getUTCDay();
         const ruler = dayRulers[weekday];
 
-        // Output
-        outYear.textContent = `Year ${nleYear} NLE`;
         outLunation.textContent = `${nleYear} – ${lunation} – ${day} NLE`;
         outZodiac.textContent = `${sunData.symbol} ${sunData.name}`;
         outMeridian.textContent = getLunarPhase(day);

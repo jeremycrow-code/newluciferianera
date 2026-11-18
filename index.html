@@ -80,50 +80,44 @@
 
 <main>
     <!-- Live Temporal Dashboard / Date Converter Widget (moved to top) -->
-    <section id="converter" class="converter-section">
-        <div class="container">
-            <div class="converter-card">
-                <h2>NLE Date Calculator</h2>
+<section id="converter" class="converter-section">
+    <div class="container">
+        <div class="converter-card">
+            <h2>Live NLE Temporal Calculator</h2>
 
-                <!-- Results first -->
-                <div id="converter-output" class="output-panel">
-                    <div class="output-grid">
-                        <div class="metric">
-                            <span class="label">NLE Year:</span>
-                            <span id="out-nle-year" class="value">—</span>
-                        </div>
-                        <div class="metric">
-                            <span class="label">Full Notation (Y – L – D NLE):</span>
-                            <span id="out-lunation" class="value">—</span>
-                        </div>
-                        <div class="metric">
-                            <span class="label">Sun in True Sky Zodiac:</span>
-                            <span id="out-zodiac" class="value">—</span>
-                        </div>
-                        <div class="metric">
-                            <span class="label">Current Moon Phase:</span>
-                            <span id="out-meridian" class="value">—</span>
-                        </div>
-                        <div class="metric">
-                            <span class="label">Day Ruler & Tarot:</span>
-                            <span id="out-day-ruler" class="value">—</span>
-                        </div>
+            <div id="converter-output" class="output-panel">
+                <div class="output-grid">
+                    <div class="metric">
+                        <span class="label">Year-Lunation-Day NLE:</span>
+                        <span id="out-lunation" class="value">—</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">Sun in True Sky Zodiac:</span>
+                        <span id="out-zodiac" class="value">—</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">Lunar Cycle Status:</span>
+                        <span id="out-meridian" class="value">—</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">Day Ruler & Tarot:</span>
+                        <span id="out-day-ruler" class="value">—</span>
                     </div>
                 </div>
-
-                <!-- Inputs below results -->
-                <div class="converter-inputs">
-                    <div class="input-group">
-                        <label for="gregorian-date">Select Gregorian Date:</label>
-                        <input type="date" id="gregorian-date">
-                    </div>
-                    <button id="convert-btn" class="btn">Calculate NLE Date</button>
-                </div>
-
-                <p class="instruction">Convert any Gregorian date into its precise New Luciferian Era lunation and True Sky coordinate. Year 0 of the New Luciferian Era began on Dec 21, 2012. Date Format: Year – Lunation – Day NLE</p>
             </div>
+
+            <div class="converter-inputs">
+                <div class="input-group">
+                    <label for="gregorian-date">Select Gregorian Date:</label>
+                    <input type="date" id="gregorian-date">
+                </div>
+                <button id="convert-btn" class="btn">Calculate NLE Coordinate</button>
+            </div>
+
+            <p class="instruction">Convert any Gregorian date into its precise New Luciferian Era lunation and True Sky coordinate. Anchored to Dec 21, 2012 = Year 0. Format: Year – Lunation – Day NLE</p>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Hero Section (now below the calculator) -->
     <section class="hero">
